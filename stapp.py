@@ -5,8 +5,8 @@ from io import StringIO
 
 st.title("FlowShop Solver")
 st.header("Input")
-input_type = st.selectbox("Votre instance", ["Fichier txt", "Remplir manuellement"])
-if input_type == "Fichier txt":
+input_type = st.selectbox("Choose an input method", [".txt file", "Fill manually"])
+if input_type == ".txt file":
     uploaded_file = st.file_uploader("Choose a file")
     if uploaded_file is not None:
         stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
@@ -30,15 +30,15 @@ if input_type == "Fichier txt":
             st.write(' ')
 
 
-if input_type == "Remplir manuellement":
+if input_type == "Fill manually":
     nbr_machines = st.number_input("Number of machines:", min_value=1, step=1)
     nbr_tasks = st.number_input("Number of tasks:", min_value=1, step=1)
     st.header("Execution time matrix")
-    matrix_str = st.text_area("Entrer les valeurs de la matrice (ligne par ligne,les colonnes separees par des espaces):")
+    matrix_str = st.text_area("Fill the matrix values (row by row, columns are separed with spaces):")
     try:
         temps = np.array([list(map(float, row.split())) for row in matrix_str.split('\n')])           
         if temps.shape == (nbr_machines, nbr_tasks):
-            st.success("La matrice a été chargée avec succès:")
+            st.success("Martix loaded successfully:")
             col1, col2, col3 = st.columns(3)
             Columns = []
             for i in range(nbr_tasks):
@@ -58,9 +58,9 @@ if input_type == "Remplir manuellement":
                 st.write(' ')
             
         else:
-            st.error(f"Erreur : la forme de la matrice ne correspond pas aux lignes spécifiées ({nbr_machines}) et colonnes ({nbr_tasks}).")
+            st.error(f"Error : The shape of the matrix does not match the specified number of rows ({nbr_machines}) or columns ({nbr_tasks}).")
     except ValueError:
-        st.error("Erreur : Veuillez saisir une matrice valide.")
+        st.error("Error : Please enter a valid matrix.")
 
 # foncion LPT indices
 def indices_descending(arr):
@@ -148,16 +148,20 @@ def NEH(temps):
         st.write('Partial sequences :')
         for i in range(len(Seq)+1):
             seq = np.insert(Seq, i, LPT[k])
-            seq_str = sequence +' ~ '+ 'T' + str(LPT[k]+1)
+            seq_str = 'T'+str(seq[0]+1)
+            for i in range(1,len(seq)):
+                seq_str = seq_str + ' ~ ' + 'T'+str(seq[i]+1)            
             sous_seq.append(seq)
             C = temps_fdt(seq,temps)
             score.append(C[-1][-1])       
             st.write(seq_str,'; Cmax = ',str(C[-1][-1]))
         minimum = np.argmin(score)
         st.write('Best k =',str(minimum+1))
+        st.write('~~~~~~~~~~~~~~')
         Seq = sous_seq[minimum]
-    
-
+        sequence = 'T'+str(Seq[0]+1)
+        for i in range(1,len(Seq)):
+            sequence = sequence + ' ~ ' + 'T'+str(Seq[i]+1)   
     return Seq
 # Heuristique CDS
 def CDS(temps):
