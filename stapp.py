@@ -235,3 +235,11 @@ elif nbr_machines >=3:
         st.write(" ")
     if solve == True:
         affichage(sequence,temps)
+
+col1,col2,col3 = st.columns(3)
+with col1:
+    st.write("made by : S.W. ZERBOUT")
+with col2:
+    st.write(" ")
+with col3:
+    st.write("Supervised by : Professor BOUDHAR")
