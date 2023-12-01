@@ -129,22 +129,32 @@ def NEH(temps):
         value = temps[0][i]
         for j in range(1,len(temps)): value += temps[j][i]
         p = np.append(p,value)
+    # affichage duree globale
     p_reshaped = p.reshape(1,5)
     table1 = pd.DataFrame(p_reshaped,columns=Columns,index=['Global Pi'])
-    
     st.dataframe(table1)
     LPT = indices_descending(p)
+    # affichage LPT
+    SEQ = "T"+str(LPT[0]+1)
+    for i in range(1,len(LPT)):
+        SEQ = SEQ + " ~ " +"T"+str(LPT[i]+1)
+    st.write('LPT :', SEQ)
     Seq.append(LPT[0])
+    sequence = 'T'+str(LPT[0]+1)
     for k in range(1,len(LPT)):
         sous_seq = []
         score = []
+        st.write('Seq = ',sequence)
+        st.write('Partial sequences :')
         for i in range(len(Seq)+1):
             seq = np.insert(Seq, i, LPT[k])
+            seq_str = sequence +' ~ '+ 'T' + str(LPT[k]+1)
             sous_seq.append(seq)
             C = temps_fdt(seq,temps)
             score.append(C[-1][-1])       
-            print(seq,i,k,C[-1][-1])
+            st.write(seq_str,'; Cmax = ',str(C[-1][-1]))
         minimum = np.argmin(score)
+        st.write('Best k =',str(minimum+1))
         Seq = sous_seq[minimum]
     
 
