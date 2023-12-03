@@ -130,7 +130,7 @@ def NEH(temps):
         for j in range(1,len(temps)): value += temps[j][i]
         p = np.append(p,value)
     # affichage duree globale
-    p_reshaped = p.reshape(1,5)
+    p_reshaped = p.reshape(1,nbr_tasks)
     table1 = pd.DataFrame(p_reshaped,columns=Columns,index=['Global Pi'])
     st.dataframe(table1)
     LPT = indices_descending(p)
